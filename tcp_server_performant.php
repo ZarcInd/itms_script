@@ -413,6 +413,57 @@ $current_batch_imeis = [ ];
 
     updateVTSData($output2["data"] ?? null);
 };
+function createTablesIfNotExist()
+{
+    global $pdo;
 
+    try {
+        $pdo->exec("CREATE TABLE IF NOT EXISTS raw_data_logs (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            raw_data TEXT,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        );");
+
+        $pdo->exec("CREATE TABLE IF NOT EXISTS itms_data (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            packet_header VARCHAR(255),
+            mode VARCHAR(255),
+            device_type VARCHAR(255),
+            packet_type VARCHAR(255),
+            firmware_version VARCHAR(255),
+            device_id VARCHAR(255),
+            ignition VARCHAR(255),
+            driver_id INT,
+            time VARCHAR(255),
+            date VARCHAR(255),
+            gps VARCHAR(255),
+            lat DECIMAL(10,6),
+            lat_dir VARCHAR(10),
+            lon DECIMAL(10,6),
+            lon_dir VARCHAR(10),
+            speed_knots INT,
+            network VARCHAR(255),
+            route_no VARCHAR(255),
+            speed_kmh DECIMAL(10,2),
+            odo_meter DECIMAL(10,2),
+            Led_health_1 INT,
+            Led_health_2 INT,
+            Led_health_3 INT,
+            Led_health_4 INT,
+            partition_key INT,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        );");
+
+        $pdo->exec("CREATE TABLE IF NOT EXISTS itms_data_update LIKE itms_data;");
+
+        echo "Tables created or already exist.\n";
+    } catch (PDOException $e) {
+        echo "Table creation failed: " . $e->getMessage() . "\n";
+    }
+}
+
+// After DB connection:
+connectDB();
+createTablesIfNotExist();
 // Run the worker
 Worker::runAll();
