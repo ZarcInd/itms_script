@@ -16,8 +16,8 @@ function connectDB()
     global $pdo;
 
     // Database connection
-    $dsn = 'mysql:host=127.0.0.1:3306;dbname=itms_primeedg';
-    $username = 'itms_primeedg';
+    $dsn = 'mysql:host=127.0.0.1:3306;dbname=itms_primeedge';
+    $username = 'itms_primeedge';
     $password = '123';
 
     try {
